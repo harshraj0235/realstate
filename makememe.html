@@ -1,0 +1,293 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Meme Generator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+</head>
+<body class="bg-gray-100 font-roboto">
+  <header class="bg-blue-600 text-white p-4">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold">Meme Generator</h1>
+      <nav>
+        <ul class="flex space-x-4">
+          <li><a class="hover:underline" href="#">Home</a></li>
+          <li><a class="hover:underline" href="#">Templates</a></li>
+          <li><a class="hover:underline" href="#">Create</a></li>
+          <li><a class="hover:underline" href="#">About</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container mx-auto p-4">
+    <section class="bg-white p-6 rounded shadow-md">
+      <h2 class="text-xl font-bold mb-4">Create Your Meme</h2>
+      <form class="space-y-4">
+        <div>
+          <label class="block text-gray-700" for="text-input">Meme Text</label>
+          <input class="w-full p-2 border border-gray-300 rounded" id="text-input" placeholder="Enter meme text" type="text"/>
+        </div>
+        <div>
+          <label class="block text-gray-700" for="image-upload">Upload Image</label>
+          <input class="w-full p-2 border border-gray-300 rounded" id="image-upload" type="file"/>
+        </div>
+        <div>
+          <label class="block text-gray-700" for="text-color">Text Color</label>
+          <input class="w-full p-2 border border-gray-300 rounded" id="text-color" type="color"/>
+        </div>
+        <div>
+          <label class="block text-gray-700" for="font-size">Text Size</label>
+          <input class="w-full p-2 border border-gray-300 rounded" id="font-size" type="number" value="24"/>
+        </div>
+        <div>
+          <label class="block text-gray-700" for="position">Text Position</label>
+          <select class="w-full p-2 border border-gray-300 rounded" id="position">
+            <option value="top">Top</option>
+            <option value="middle">Middle</option>
+            <option value="bottom">Bottom</option>
+          </select>
+        </div>
+        <button class="bg-blue-600 text-white px-4 py-2 rounded" id="generate-meme" type="button">
+          Generate Meme
+        </button>
+      </form>
+    </section>
+
+    <section class="mt-8">
+      <h2 class="text-xl font-bold mb-4">Your Meme</h2>
+      <div class="bg-white p-6 rounded shadow-md">
+        <canvas class="w-full" height="400" id="meme-canvas" width="600"></canvas>
+      </div>
+      <div class="flex space-x-4 mt-4">
+        <button class="bg-green-600 text-white px-4 py-2 rounded" id="download-instagram" type="button" disabled>
+          Download Instagram Size
+        </button>
+        <button class="bg-blue-600 text-white px-4 py-2 rounded" id="download-twitter" type="button" disabled>
+          Download Twitter Size
+        </button>
+        <button class="bg-gray-600 text-white px-4 py-2 rounded" id="download-facebook" type="button" disabled>
+          Download Facebook Size
+        </button>
+      </div>
+    </section>
+
+    <section class="mt-8">
+        <h2 class="text-xl font-bold mb-4">
+         Choose a Meme Template
+        </h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+         <div class="bg-white p-4 rounded shadow-md">
+          <img alt="Distracted Boyfriend meme template" class="w-full" height="200" src="https://storage.googleapis.com/a1aa/image/sHfSDLDpjySfSkQseuuEuWbfXJC7zBfGtrZMQBykbIl7CZ3dC.jpg" width="200"/>
+          <p class="text-center mt-2">
+           Distracted Boyfriend
+          </p>
+         </div>
+         <div class="bg-white p-4 rounded shadow-md">
+          <img alt="Drake Hotline Bling meme template" class="w-full" height="200" src="https://storage.googleapis.com/a1aa/image/x9U2HzOhE34HPRn52sitiI4rfOIE3IlgWuozcZc1y6mFkd3JA.jpg" width="200"/>
+          <p class="text-center mt-2">
+           Drake Hotline Bling
+          </p>
+         </div>
+         <div class="bg-white p-4 rounded shadow-md">
+          <img alt="Two Buttons meme template" class="w-full" height="200" src="https://storage.googleapis.com/a1aa/image/BCWytU7BJdanHpe7Ba6XYwMRUqZw2oEsvQfyd0iY9YdSI7uTA.jpg" width="200"/>
+          <p class="text-center mt-2">
+           Two Buttons
+          </p>
+         </div>
+         <div class="bg-white p-4 rounded shadow-md">
+          <img alt="Mocking Spongebob meme template" class="w-full" height="200" src="https://storage.googleapis.com/a1aa/image/etbmqBGYXVUBbCeXIFokzEkhxPwSZyGpMRRjYYAG0aFUI7uTA.jpg" width="200"/>
+          <p class="text-center mt-2">
+           Mocking Spongebob
+          </p>
+         </div>
+         <div class="bg-white p-4 rounded shadow-md">
+          <img alt="Expanding Brain meme template" class="w-full" height="200" src="https://storage.googleapis.com/a1aa/image/RW3aoOQOBILVJdJtLbfFlgjV8VcCDfaMp3JcxBzPDNfKQ2dnA.jpg" width="200"/>
+          <p class="text-center mt-2">
+           Expanding Brain
+          </p>
+         </div>
+         <div class="bg-white p-4 rounded shadow-md">
+          <img alt="Change My Mind meme template" class="w-full" height="200" src="https://storage.googleapis.com/a1aa/image/twq6vQcnobIMLBqzxBop5vNTrrnoRmQYsZBst2I1mV5Ayu7E.jpg" width="200"/>
+          <p class="text-center mt-2">
+           Change My Mind
+          </p>
+         </div>
+         <div class="bg-white p-4 rounded shadow-md">
+          <img alt="Left Exit 12 Off Ramp meme template" class="w-full" height="200" src="https://storage.googleapis.com/a1aa/image/oyltEL2vrhqZExgyXZIKqObsIvKbweBm5jKakWsOD3UIkd3JA.jpg" width="200"/>
+          <p class="text-center mt-2">
+           Left Exit 12 Off Ramp
+          </p>
+         </div>
+         <div class="bg-white p-4 rounded shadow-md">
+          <img alt="Roll Safe Think About It meme template" class="w-full" height="200" src="https://storage.googleapis.com/a1aa/image/VnBmmRU8pW6RIt7Mh6TOFnXUtDBRurAUjX2eTReFTGqCI7uTA.jpg" width="200"/>
+          <p class="text-center mt-2">
+           Roll Safe Think About It
+          </p>
+         </div>
+         <div class="bg-white p-4 rounded shadow-md">
+          <img alt="Success Kid meme template" class="w-full" height="200" src="https://storage.googleapis.com/a1aa/image/kvwprSbrCUYxENSsI229l04f6uI4M2Bm0Pgh6dBfoeoTQ2dnA.jpg" width="200"/>
+          <p class="text-center mt-2">
+           Success Kid
+          </p>
+         </div>
+         <div class="bg-white p-4 rounded shadow-md">
+          <img alt="Grumpy Cat meme template" class="w-full" height="200" src="https://storage.googleapis.com/a1aa/image/NFiDetKNePpq90wedWT5gRfIIKu96QglCLhhPGgaj9s2gs7OB.jpg" width="200"/>
+          <p class="text-center mt-2">
+           Grumpy Cat
+          </p>
+         </div>
+         <div class="bg-white p-4 rounded shadow-md">
+          <img alt="Bad Luck Brian meme template" class="w-full" height="200" src="https://storage.googleapis.com/a1aa/image/rH3ySChKGMo9HhZAynlv8qx4GIqrwANm3ez0uHl0UrGfH7uTA.jpg" width="200"/>
+          <p class="text-center mt-2">
+           Bad Luck Brian
+          </p>
+         </div>
+         <div class="bg-white p-4 rounded shadow-md">
+          <img alt="One Does Not Simply meme template" class="w-full" height="200" src="https://storage.googleapis.com/a1aa/image/WmEsNWeK9X1GM6rt9p3yVLTKACM0UuxN2s9AYsfQHoTfP2dnA.jpg" width="200"/>
+          <p class="text-center mt-2">
+           One Does Not Simply
+          </p>
+         </div>
+         <div class="bg-white p-4 rounded shadow-md">
+          <img alt="Y U No meme template" class="w-full" height="200" src="https://storage.googleapis.com/a1aa/image/5gtQeey18GrouUoAoEBJe5ITnCrXfDHcIJvt5GdQaSe1CZ3dC.jpg" width="200"/>
+          <p class="text-center mt-2">
+           Y U No
+          </p>
+         </div>
+         <div class="bg-white p-4 rounded shadow-md">
+          <img alt="Futurama Fry meme template" class="w-full" height="200" src="https://storage.googleapis.com/a1aa/image/iFoUWHSt2iJtNpUe6iIq5fj0U7cQ3DFlrc7XVMg37l2GI7uTA.jpg" width="200"/>
+          <p class="text-center mt-2">
+           Futurama Fry
+          </p>
+         </div>
+         <div class="bg-white p-4 rounded shadow-md">
+          <img alt="Philosoraptor meme template" class="w-full" height="200" src="https://storage.googleapis.com/a1aa/image/Jt4BbRAf8nWwKCSQf37ARYCz3InY6DzfbIdJyNg8iLBegs7OB.jpg" width="200"/>
+          <p class="text-center mt-2">
+           Philosoraptor
+          </p>
+         </div>
+         <div class="bg-white p-4 rounded shadow-md">
+          <img alt="Condescending Wonka meme template" class="w-full" height="200" src="https://storage.googleapis.com/a1aa/image/DCTdd6qPp4ZDFJlYUunvY55uvBGe94l86GFuGtPwBJPCkd3JA.jpg" width="200"/>
+          <p class="text-center mt-2">
+           Condescending Wonka
+          </p>
+         </div>
+         <div class="bg-white p-4 rounded shadow-md">
+          <img alt="First World Problems meme template" class="w-full" height="200" src="https://storage.googleapis.com/a1aa/image/LZKkpwhu2tJVPVvLg4bCe1oH30RQpeD6yHXkDGcckIXKI7uTA.jpg" width="200"/>
+          <p class="text-center mt-2">
+           First World Problems
+          </p>
+         </div>
+         <div class="bg-white p-4 rounded shadow-md">
+          <img alt="Scumbag Steve meme template" class="w-full" height="200" src="https://storage.googleapis.com/a1aa/image/DODwbcKQYCLLM10vLbh9WVjHWU4meGk4Bxp6RrRunbCEkd3JA.jpg" width="200"/>
+          <p class="text-center mt-2">
+           Scumbag Steve
+          </p>
+         </div>
+         <div class="bg-white p-4 rounded shadow-md">
+          <img alt="Ancient Aliens meme template" class="w-full" height="200" src="https://storage.googleapis.com/a1aa/image/Y9tgWHYuBJbdKtfjf9wfvcw3w1Dao8BHkvuAbevUQRRCgs7OB.jpg" width="200"/>
+          <p class="text-center mt-2">
+           Ancient Aliens
+          </p>
+         </div>
+        </div>
+       </section>
+     
+      
+      
+      
+  </main>
+
+
+  <script>
+    const generateButton = document.getElementById("generate-meme");
+    const downloadInstagramButton = document.getElementById("download-instagram");
+    const downloadTwitterButton = document.getElementById("download-twitter");
+    const downloadFacebookButton = document.getElementById("download-facebook");
+    const memeCanvas = document.getElementById("meme-canvas");
+    const ctx = memeCanvas.getContext("2d");
+
+    let uploadedImage = null;
+
+    // Handle Image Upload
+    document.getElementById("image-upload").addEventListener("change", function(event) {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          uploadedImage = img;
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // Generate Meme
+    generateButton.addEventListener("click", function() {
+      const textInput = document.getElementById("text-input").value;
+      const textColor = document.getElementById("text-color").value;
+      const fontSize = document.getElementById("font-size").value;
+      const textPosition = document.getElementById("position").value;
+
+      if (uploadedImage) {
+        memeCanvas.width = uploadedImage.width;
+        memeCanvas.height = uploadedImage.height;
+
+        ctx.clearRect(0, 0, memeCanvas.width, memeCanvas.height);
+        ctx.drawImage(uploadedImage, 0, 0);
+
+        ctx.font = `${fontSize}px Arial`;
+        ctx.fillStyle = textColor;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        let textY;
+        if (textPosition === "top") textY = 50;
+        else if (textPosition === "bottom") textY = memeCanvas.height - 50;
+        else textY = memeCanvas.height / 2;
+
+        ctx.fillText(textInput, memeCanvas.width / 2, textY);
+
+        // Enable Download buttons
+        downloadInstagramButton.disabled = false;
+        downloadTwitterButton.disabled = false;
+        downloadFacebookButton.disabled = false;
+      } else {
+        alert("Please upload an image first!");
+      }
+    });
+
+    // Download Meme for Instagram (1080x1080)
+    downloadInstagramButton.addEventListener("click", function() {
+      const dataURL = memeCanvas.toDataURL("image/png");
+      const a = document.createElement("a");
+      a.href = dataURL;
+      a.download = "meme_instagram.png";
+      a.click();
+    });
+
+    // Download Meme for Twitter (1200x675)
+    downloadTwitterButton.addEventListener("click", function() {
+      const dataURL = memeCanvas.toDataURL("image/png");
+      const a = document.createElement("a");
+      a.href = dataURL;
+      a.download = "meme_twitter.png";
+      a.click();
+    });
+
+    // Download Meme for Facebook (1200x630)
+    downloadFacebookButton.addEventListener("click", function() {
+      const dataURL = memeCanvas.toDataURL("image/png");
+      const a = document.createElement("a");
+      a.href = dataURL;
+      a.download = "meme_facebook.png";
+      a.click();
+    });
+  </script>
+</body>
+</html>

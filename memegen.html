@@ -1,0 +1,259 @@
+<html>
+ <head>
+  <title>
+   Meme Generator
+  </title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet"/>
+  <script>
+   document.addEventListener('DOMContentLoaded', function () {
+            const uploadButton = document.getElementById('upload-button');
+            const fileInput = document.getElementById('file-input');
+            const linkInput = document.getElementById('link-input');
+            const memeImage = document.getElementById('meme-image');
+            const editButton = document.getElementById('edit-meme-button');
+            const downloadButton = document.getElementById('download-meme-button');
+            const topTextInput = document.getElementById('top-text');
+            const bottomTextInput = document.getElementById('bottom-text');
+            const textColorInput = document.getElementById('text-color');
+            const textSizeInput = document.getElementById('text-size');
+            const textFontInput = document.getElementById('text-font');
+            const textOutlineInput = document.getElementById('text-outline');
+            const dropArea = document.getElementById('drop-area');
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+
+            uploadButton.addEventListener('click', function () {
+                const file = fileInput.files[0];
+                const link = linkInput.value;
+
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        memeImage.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                } else if (link) {
+                    memeImage.src = link;
+                }
+            });
+
+            editButton.addEventListener('click', function () {
+                const topText = topTextInput.value;
+                const bottomText = bottomTextInput.value;
+                const textColor = textColorInput.value;
+                const textSize = textSizeInput.value;
+                const textFont = textFontInput.value;
+                const textOutline = textOutlineInput.checked;
+
+                canvas.width = memeImage.width;
+                canvas.height = memeImage.height;
+                ctx.drawImage(memeImage, 0, 0, canvas.width, canvas.height);
+
+                ctx.font = ${textSize}px ${textFont};
+                ctx.fillStyle = textColor;
+                ctx.textAlign = 'center';
+
+                if (textOutline) {
+                    ctx.strokeStyle = 'black';
+                    ctx.lineWidth = 4;
+                    ctx.strokeText(topText, canvas.width / 2, 50);
+                    ctx.strokeText(bottomText, canvas.width / 2, canvas.height - 20);
+                }
+
+                ctx.fillText(topText, canvas.width / 2, 50);
+                ctx.fillText(bottomText, canvas.width / 2, canvas.height - 20);
+
+                memeImage.src = canvas.toDataURL();
+            });
+
+            downloadButton.addEventListener('click', function () {
+                const link = document.createElement('a');
+                link.href = memeImage.src;
+                link.download = 'meme.png';
+                link.click();
+            });
+
+            // Drag and Drop functionality
+            dropArea.addEventListener('dragover', function (e) {
+                e.preventDefault();
+                dropArea.classList.add('bg-gray-200');
+            });
+
+            dropArea.addEventListener('dragleave', function (e) {
+                e.preventDefault();
+                dropArea.classList.remove('bg-gray-200');
+            });
+
+            dropArea.addEventListener('drop', function (e) {
+                e.preventDefault();
+                dropArea.classList.remove('bg-gray-200');
+                const file = e.dataTransfer.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        memeImage.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            dropArea.addEventListener('click', function () {
+                fileInput.click();
+            });
+
+            fileInput.addEventListener('change', function () {
+                const file = fileInput.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        memeImage.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+  </script>
+ </head>
+ <body class="bg-gray-100 font-roboto">
+  <header class="bg-blue-600 text-white p-4">
+   <h1 class="text-3xl font-bold text-center">
+    Free Meme Generator
+   </h1>
+  </header>
+  <main class="container mx-auto p-4">
+   <section class="bg-white p-6 rounded shadow-md mb-6">
+    <h2 class="text-2xl font-bold mb-4">
+     Upload or Paste Link
+    </h2>
+    <div class="flex flex-col md:flex-row items-center mb-4">
+     <input class="border p-2 rounded mb-4 md:mb-0 md:mr-4" id="file-input" type="file" style="display: none;"/>
+     <input class="border p-2 rounded flex-grow" id="link-input" placeholder="Paste image link here" type="text"/>
+    </div>
+    <button class="bg-blue-600 text-white px-4 py-2 rounded" id="upload-button">
+     Upload
+    </button>
+   </section>
+   <section class="bg-white p-6 rounded shadow-md mb-6">
+    <h2 class="text-2xl font-bold mb-4">
+     Edit Your Meme
+    </h2>
+    <div class="flex flex-col md:flex-row mb-4">
+     <div class="flex-grow mb-4 md:mb-0 md:mr-4">
+      <div class="border-2 border-dashed border-gray-400 p-4 rounded cursor-pointer" id="drop-area">
+       <p class="text-center text-gray-500">
+        Drag and drop an image here or click to upload
+       </p>
+       <img alt="Viral meme image of a distracted boyfriend looking at another woman while his girlfriend looks at him in disbelief" class="w-full rounded mt-4" height="400" id="meme-image" src="https://storage.googleapis.com/a1aa/image/H9pfgbe40Spqd0y2A9YIahTcBz5VubrfeYrjopTU1vSabm7OB.jpg" width="600"/>
+      </div>
+     </div>
+     <div class="flex-grow">
+      <div class="mb-4">
+       <label class="block mb-2 font-bold">
+        Top Text
+       </label>
+       <input class="border p-2 rounded w-full" id="top-text" type="text"/>
+      </div>
+      <div class="mb-4">
+       <label class="block mb-2 font-bold">
+        Bottom Text
+       </label>
+       <input class="border p-2 rounded w-full" id="bottom-text" type="text"/>
+      </div>
+      <div class="mb-4">
+       <label class="block mb-2 font-bold">
+        Text Color
+       </label>
+       <input class="border p-2 rounded w-full" id="text-color" type="color"/>
+      </div>
+      <div class="mb-4">
+       <label class="block mb-2 font-bold">
+        Text Size
+       </label>
+       <input class="border p-2 rounded w-full" id="text-size" type="number"/>
+      </div>
+      <div class="mb-4">
+       <label class="block mb-2 font-bold">
+        Text Font
+       </label>
+       <select class="border p-2 rounded w-full" id="text-font">
+        <option value="Arial">
+         Arial
+        </option>
+        <option value="Impact">
+         Impact
+        </option>
+        <option value="Comic Sans MS">
+         Comic Sans MS
+        </option>
+        <option value="Times New Roman">
+         Times New Roman
+        </option>
+       </select>
+      </div>
+      <div class="mb-4">
+       <label class="block mb-2 font-bold">
+        Text Outline
+       </label>
+       <input class="border p-2 rounded" id="text-outline" type="checkbox"/>
+      </div>
+     </div>
+    </div>
+    <button class="bg-green-600 text-white px-4 py-2 rounded mb-4" id="edit-meme-button">
+     Edit Meme
+    </button>
+    <button class="bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-white px-4 py-2 rounded" id="download-meme-button">
+     Download Meme
+    </button>
+   </section>
+   <section class="bg-white p-6 rounded shadow-md mb-6">
+    <h2 class="text-2xl font-bold mb-4">
+     How to Edit and Resize Memes
+    </h2>
+    <p class="mb-4">
+     Welcome to our free meme generator! Follow these simple steps to create your own memes:
+    </p>
+    <ol class="list-decimal list-inside mb-4">
+     <li class="mb-4">
+      <p>
+       Upload an image or paste a link to an image.
+      </p>
+      <img alt="Step 1: Upload an image or paste a link to an image" class="w-full rounded" height="200" src="https://storage.googleapis.com/a1aa/image/imhQnL7g2tK8FJSeIzTF43f5fGMfqMn508DCgNb1w4WKim7OB.jpg" width="600"/>
+     </li>
+     <li class="mb-4">
+      <p>
+       Use the editing tools to add text, change text color, and adjust text size.
+      </p>
+      <img alt="Step 2: Use the editing tools to add text, change text color, and adjust text size" class="w-full rounded" height="200" src="https://storage.googleapis.com/a1aa/image/HNlbrnhkRDrgGFlBEywH3F0tz0nnmcr3L9OxP3OfctUazc3JA.jpg" width="600"/>
+     </li>
+     <li class="mb-4">
+      <p>
+       Click "Edit Meme" to apply your changes.
+      </p>
+      <img alt="Step 3: Click 'Edit Meme' to apply your changes" class="w-full rounded" height="200" src="https://storage.googleapis.com/a1aa/image/RmAeBuAgIx3wJ6xVGRpevzqCWhtgg2qcqbfVTs6RF9WuNzdnA.jpg" width="600"/>
+     </li>
+     <li class="mb-4">
+      <p>
+       Download your meme by clicking the "Download Meme" button.
+      </p>
+      <img alt="Step 4: Download your meme by clicking the 'Download Meme' button" class="w-full rounded" height="200" src="https://storage.googleapis.com/a1aa/image/eXfSAcpGsRiOfpxc7wUdnaDgt7n2Q68DEeQsdjOUiFQkbm7OB.jpg" width="600"/>
+     </li>
+    </ol>
+    <p>
+     For more detailed instructions and tips, visit our
+     <a class="text-blue-600 underline" href="https://example.com/meme-editing-guide" target="_blank">
+      comprehensive guide
+     </a>
+     .
+    </p>
+   </section>
+  </main>
+  <footer class="bg-blue-600 text-white p-4 text-center">
+   <p>
+    © 2023 Meme Generator. All rights reserved.
+   </p>
+  </footer>
+ </body>
+</html>

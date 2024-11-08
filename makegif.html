@@ -1,0 +1,217 @@
+<html>
+ <head>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <meta content="Animated GIF Maker, Free GIF Maker, AI GIF Maker, Meme Free Generator, Free GIF Maker" name="description"/>
+  <title>
+   Animated GIF Maker - Free GIF Maker, AI GIF Maker, Meme Free Generator
+  </title>
+  <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@5.0.0/dist/ffmpeg.min.js">
+  </script>
+ </head>
+ <body class="bg-gray-900 text-white font-sans">
+  <div class="container mx-auto p-4">
+   <div class="text-center mb-8">
+    <h1 class="text-3xl font-bold">
+     Animated GIF Maker
+    </h1>
+    <p class="text-gray-400">
+     Make animated GIFs from video files, Youtube videos, video websites, or images
+    </p>
+   </div>
+   <div class="flex justify-center mb-8">
+    <div class="bg-gray-800 rounded-t-lg">
+     <button class="bg-gray-700 text-white py-2 px-4 rounded-tl-lg" id="videoToGifBtn">
+      Video to GIF
+     </button>
+     <button class="bg-gray-600 text-white py-2 px-4 rounded-tr-lg" id="imagesToGifBtn">
+      Images to GIF
+     </button>
+    </div>
+   </div>
+   <!-- Video to GIF Section -->
+   <div class="bg-gray-800 p-4 rounded-lg mb-8" id="videoToGifSection">
+    <input accept="video/*" class="bg-gray-700 text-white py-2 px-4 w-full mb-4" id="videoInput" type="file"/>
+    <p class="text-center text-gray-400 mb-4">
+     or
+    </p>
+    <input class="bg-gray-700 text-white py-2 px-4 w-full rounded-lg mb-4" id="videoUrlInput" placeholder="video or .gif url e.g. https://youtu.be/9bZk" type="text"/>
+    <button class="bg-blue-500 text-white py-2 px-4 w-full mb-4" id="generateVideoGifBtn">
+     Generate GIF
+    </button>
+    <!-- Loading Spinner for Processing -->
+    <div class="text-center mb-4" id="loadingIndicator" style="display:none;">
+     <i class="fa fa-spinner fa-spin text-4xl text-gray-400">
+     </i>
+     <p class="text-gray-400">
+      Processing...
+     </p>
+    </div>
+    <!-- GIF Preview Section -->
+    <div class="mb-4" id="videoGifPreview" style="display: none;">
+     <img alt="Generated GIF from video" class="rounded-lg w-full" height="300" id="videoGifImage" src="" width="300"/>
+    </div>
+    <button class="bg-green-500 text-white py-2 px-4 w-full" id="downloadVideoGifBtn" style="display: none;">
+     Download GIF
+    </button>
+   </div>
+   <!-- Image to GIF Section -->
+   <div class="bg-gray-800 p-4 rounded-lg mb-8" id="imagesToGifSection" style="display: none;">
+    <input accept="image/*" class="bg-gray-700 text-white py-2 px-4 w-full mb-4" id="imageInput" multiple="" type="file"/>
+    <p class="text-center text-gray-400 mb-4">
+     or
+    </p>
+    <input class="bg-gray-700 text-white py-2 px-4 w-full rounded-lg mb-4" id="imageUrlInput" placeholder="image url e.g. https://example.com/image.jpg" type="text"/>
+    <button class="bg-blue-500 text-white py-2 px-4 w-full mb-4" id="generateImageGifBtn">
+     Generate GIF
+    </button>
+    <div class="mb-4" id="imageGifPreview" style="display: none;">
+     <img alt="Generated GIF from images" class="rounded-lg w-full" height="300" id="imageGifImage" src="" width="300"/>
+    </div>
+    <button class="bg-green-500 text-white py-2 px-4 w-full" id="downloadImageGifBtn" style="display: none;">
+     Download GIF
+    </button>
+   </div>
+   <!-- Social Media Resize Options -->
+   <div class="bg-gray-800 p-4 rounded-lg mb-8">
+    <h2 class="text-xl font-bold mb-4">
+     Select Social Media Size
+    </h2>
+    <select class="bg-gray-700 text-white py-2 px-4 w-full mb-4" id="socialMediaSelect">
+     <option value="1:1">
+      Square (1:1)
+     </option>
+     <option value="9:16">
+      Story (9:16)
+     </option>
+     <option value="16:9">
+      Landscape (16:9)
+     </option>
+    </select>
+    <button class="bg-blue-500 text-white py-2 px-4 w-full" id="resizeGifBtn">
+     Resize GIF for Social Media
+    </button>
+   </div>
+  </div>
+  <script>
+   // Generate GIF from video
+        async function generateGifFromVideo(videoUrl) {
+          try {
+            const ffmpeg = FFmpeg.createFFmpeg({ log: true });
+            await ffmpeg.load();
+            console.log("FFmpeg loaded successfully");
+      
+            const videoData = await fetch(videoUrl).then(res => res.blob());
+            const videoFileName = 'input.mp4';
+            ffmpeg.FS('writeFile', videoFileName, new Uint8Array(await videoData.arrayBuffer()));
+      
+            const outputGifName = 'output.gif';
+            console.log("Starting GIF conversion...");
+      
+            // Run ffmpeg command to generate the GIF
+            await ffmpeg.run('-i', videoFileName, '-t', '5', '-vf', 'fps=10,scale=320:-1', outputGifName);
+      
+            const gifData = ffmpeg.FS('readFile', outputGifName);
+            const gifBlob = new Blob([gifData.buffer], { type: 'image/gif' });
+            const gifUrl = URL.createObjectURL(gifBlob);
+      
+            // Display GIF preview and download link
+            document.getElementById('videoGifImage').src = gifUrl;
+            document.getElementById('videoGifPreview').style.display = 'block';
+            document.getElementById('downloadVideoGifBtn').style.display = 'block';
+      
+            document.getElementById('downloadVideoGifBtn').onclick = function() {
+              const link = document.createElement('a');
+              link.href = gifUrl;
+              link.download = 'video-output.gif';
+              link.click();
+            };
+            
+          } catch (error) {
+            console.error("Error during GIF generation:", error);
+            alert('There was an error processing the video. Check the console for details.');
+            // You can also display error in the UI like:
+            document.getElementById('loadingIndicator').style.display = 'none';
+          } finally {
+            // Hide loading indicator once process is complete
+            document.getElementById('loadingIndicator').style.display = 'none';
+          }
+        }
+      
+        document.getElementById('generateVideoGifBtn').addEventListener('click', async function() {
+          const videoInput = document.getElementById('videoInput').files[0];
+          const videoUrlInput = document.getElementById('videoUrlInput').value;
+      
+          // Show loading indicator
+          document.getElementById('loadingIndicator').style.display = 'block';
+      
+          if (videoInput) {
+            const videoUrl = URL.createObjectURL(videoInput);
+            await generateGifFromVideo(videoUrl);
+          } else if (videoUrlInput) {
+            alert('Processing video URL...');
+            await generateGifFromVideo(videoUrlInput); // Placeholder, actual URL to GIF conversion may need server-side
+          } else {
+            alert('Please upload a video or provide a URL.');
+            document.getElementById('loadingIndicator').style.display = 'none';
+          }
+        });
+  </script>
+  <main class="container mx-auto my-8 p-4 bg-white rounded shadow">
+   <section class="text-center mb-8">
+    <h2 class="text-3xl font-bold mb-4 text-black">
+     Create Animated GIFs Easily
+    </h2>
+    <p class="text-lg text-black">
+     Make animated GIFs from video files, YouTube videos, video websites, or images.
+    </p>
+   </section>
+   <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div class="flex flex-col items-center">
+     <img alt="Screenshot of the GIF maker interface with video upload options" class="mb-4 rounded shadow" height="300" src="https://storage.googleapis.com/a1aa/image/fN7XHbb9bDUNOSLn91vG5aedj3OVZowsGE3aRFeUekuhZv7OB.jpg" width="400"/>
+     <h3 class="text-xl font-bold mb-2 text-black">
+      Step 1: Upload Your Video or Images
+     </h3>
+     <p class="text-center text-black">
+      Choose a video file, paste a YouTube link, or upload images to start creating your GIF.
+     </p>
+    </div>
+    <div class="flex flex-col items-center">
+     <img alt="Screenshot of the GIF maker interface with editing tools" class="mb-4 rounded shadow" height="300" src="https://storage.googleapis.com/a1aa/image/cO04nIOpe235cCsOsXCI53jXBzReFhwc3qx1GHMrc10Z27uTA.jpg" width="400"/>
+     <h3 class="text-xl font-bold mb-2 text-black">
+      Step 2: Edit Your GIF
+     </h3>
+     <p class="text-center text-black">
+      Trim the video, add text, and customize your GIF with various editing tools.
+     </p>
+    </div>
+    <div class="flex flex-col items-center">
+     <img alt="Screenshot of the GIF maker interface with preview options" class="mb-4 rounded shadow" height="300" src="https://storage.googleapis.com/a1aa/image/mO5e6URc240zTawfMCcrMdO7jadi7Y3PI6FpeA2S2Tlts3dnA.jpg" width="400"/>
+     <h3 class="text-xl font-bold mb-2 text-black">
+      Step 3: Preview Your GIF
+     </h3>
+     <p class="text-center text-black">
+      Preview your GIF to ensure it looks perfect before saving.
+     </p>
+    </div>
+    <div class="flex flex-col items-center">
+     <img alt="Screenshot of the GIF maker interface with download options" class="mb-4 rounded shadow" height="300" src="https://storage.googleapis.com/a1aa/image/gdHXnTLmUnLrKxzhCko6vDUXzyoQgKnBZqqhCiNpUjhm9u7E.jpg" width="400"/>
+     <h3 class="text-xl font-bold mb-2 text-black">
+      Step 4: Save and Share
+     </h3>
+     <p class="text-center text-black">
+      Download your GIF or share it directly to social media platforms.
+     </p>
+    </div>
+   </section>
+  </main>
+  <footer class="bg-blue-600 text-white p-4 mt-8">
+   <div class="container mx-auto text-center">
+    <p>
+     © 2023 Animated GIF Maker. All rights reserved.
+    </p>
+   </div>
+  </footer>
+ </body>
+</html>
