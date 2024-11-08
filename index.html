@@ -67,6 +67,34 @@
     });
   </script>
   <main class="container mx-auto mt-8 p-4">
+  <section class="text-center mb-8">
+        <h2 class="text-3xl font-bold mb-4 gradient-text floating">Create Viral Meme Images with AI</h2>
+        <p class="text-lg mb-4 text-white">Generate stunning images using AI and customize them to go viral on social media.</p>
+        
+        <!-- Input prompt and Generate + Random Prompt buttons -->
+        <div class="flex justify-center mb-4">
+          <input id="promptInput" class="border border-gray-300 p-2 rounded-l w-2/3 md:w-1/2" placeholder="Enter your prompt here..." type="text"/>
+          <button id="generateButton" class="bg-blue-600 text-white p-2 rounded hover:bg-blue-700">Generate</button>
+          <button id="randomButton" class="bg-yellow-500 text-white p-2 rounded hover:bg-yellow-600 ml-2">Random Prompt</button>
+        </div>
+      
+        <!-- Status area for spinner and error messages -->
+        <div id="status" class="mb-4"></div>
+      
+        <!-- Display generated image and download buttons for various social media sizes -->
+        <div id="imageContainer" class="hidden text-center">
+          <img id="generatedImage" class="mx-auto mb-4" alt="Generated AI Image" />
+          
+          <div id="downloadOptions" class="flex flex-col space-y-2">
+            <p class="text-white">Download for:</p>
+            <button onclick="downloadImage('1080x1080')" class="bg-green-500 text-white p-2 rounded hover:bg-green-600">Instagram (1080x1080)</button>
+            <button onclick="downloadImage('1200x675')" class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Twitter (1200x675)</button>
+            <button onclick="downloadImage('1200x630')" class="bg-indigo-500 text-white p-2 rounded hover:bg-indigo-600">Facebook (1200x630)</button>
+            <button onclick="downloadImage('1080x1920')" class="bg-purple-500 text-white p-2 rounded hover:bg-purple-600">Stories/Reels (1080x1920)</button>
+          </div>
+        </div>
+      </section>
+    
     <section class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <a href="makememe.html" id="open-meme-modal" class="bg-white p-4 rounded shadow flex flex-col items-center hover:bg-gray-200">
             <i class="fas fa-smile text-blue-600 text-4xl mb-2"></i>
@@ -98,34 +126,6 @@
         <span class="text-center">Edit/Add Text</span>
       </a>
     </section>
-
-    <section class="text-center mb-8">
-        <h2 class="text-3xl font-bold mb-4 gradient-text floating">Create Viral Images with AI</h2>
-        <p class="text-lg mb-4 text-white">Generate stunning images using AI and customize them to go viral on social media.</p>
-        
-        <!-- Input prompt and Generate + Random Prompt buttons -->
-        <div class="flex justify-center mb-4">
-          <input id="promptInput" class="border border-gray-300 p-2 rounded-l w-2/3 md:w-1/2" placeholder="Enter your prompt here..." type="text"/>
-          <button id="generateButton" class="bg-blue-600 text-white p-2 rounded hover:bg-blue-700">Generate</button>
-          <button id="randomButton" class="bg-yellow-500 text-white p-2 rounded hover:bg-yellow-600 ml-2">Random Prompt</button>
-        </div>
-      
-        <!-- Status area for spinner and error messages -->
-        <div id="status" class="mb-4"></div>
-      
-        <!-- Display generated image and download buttons for various social media sizes -->
-        <div id="imageContainer" class="hidden text-center">
-          <img id="generatedImage" class="mx-auto mb-4" alt="Generated AI Image" />
-          
-          <div id="downloadOptions" class="flex flex-col space-y-2">
-            <p class="text-white">Download for:</p>
-            <button onclick="downloadImage('1080x1080')" class="bg-green-500 text-white p-2 rounded hover:bg-green-600">Instagram (1080x1080)</button>
-            <button onclick="downloadImage('1200x675')" class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Twitter (1200x675)</button>
-            <button onclick="downloadImage('1200x630')" class="bg-indigo-500 text-white p-2 rounded hover:bg-indigo-600">Facebook (1200x630)</button>
-            <button onclick="downloadImage('1080x1920')" class="bg-purple-500 text-white p-2 rounded hover:bg-purple-600">Stories/Reels (1080x1920)</button>
-          </div>
-        </div>
-      </section>
       
       <style>
         /* Spinner styling */
