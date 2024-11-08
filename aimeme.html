@@ -13,12 +13,29 @@
    body {
             font-family: 'Inter', sans-serif;
         }
+    .spinner {
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border-left-color: #09f;
+        animation: spin 1s ease infinite;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
   </style>
  </head>
  <body class="bg-gray-50">
   <div class="flex flex-col items-center justify-center min-h-screen p-4">
    <div class="relative w-full max-w-md mb-6">
-    <img alt="AI Meme Generator interface with a sample meme of a baby" class="rounded-lg shadow-lg" height="400" src="https://storage.googleapis.com/a1aa/image/3GlkwwezyepcQERbSZPvJgzH1Ov7QFw8fQbq05eAlFlfWH3dC.jpg" width="600"/>
+    <img alt="AI Meme Generator interface with a sample meme of a baby" class="rounded-lg shadow-lg" height="400" src="https://storage.googleapis.com/a1aa/image/LshrSVte4FVtZ6XtOJScJACKYUoUrLi5S0EzvzYXEXf95ednA.jpg" width="600"/>
     <div class="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 rounded-lg flex items-center justify-center">
      <div class="text-center text-white">
       <p class="text-lg">
@@ -35,12 +52,16 @@
      Tired of stale memes? Our AI Meme Generator lets you create hilarious memes in no time!
     </p>
     <div class="flex items-center justify-center mb-6">
-     <input class="w-full max-w-md p-3 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="Enter your topic to Generate Meme Quickly using AI" type="text"/>
-     <button class="bg-yellow-500 text-white px-6 py-3 rounded-r-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500">
+     <input id="promptInput" class="w-full max-w-md p-3 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="Enter your topic to Generate Meme Quickly using AI" type="text"/>
+     <button id="generateButton" class="bg-yellow-500 text-white px-6 py-3 rounded-r-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500">
       <i class="fas fa-magic mr-2">
       </i>
       Generate
      </button>
+    </div>
+    <div id="status" class="mb-6"></div>
+    <div id="meme-container" class="w-full max-w-md bg-white p-6 rounded-lg shadow-lg mb-6">
+     <img id="generatedImage" alt="Generated meme will appear here" class="rounded-lg shadow-lg w-full"/>
     </div>
     <div class="w-full max-w-md bg-white p-6 rounded-lg shadow-lg">
      <h2 class="text-2xl font-bold mb-4">
@@ -50,13 +71,13 @@
       <label class="block text-gray-700 mb-2">
        Add Text to Image
       </label>
-      <input class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="Enter text to add to image" type="text"/>
+      <input id="meme-text" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="Enter text to add to image" type="text"/>
      </div>
      <div class="mb-4">
       <label class="block text-gray-700 mb-2">
        Text Position
       </label>
-      <select class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500">
+      <select id="text-position" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500">
        <option>
         Top
        </option>
@@ -75,31 +96,31 @@
       <label class="block text-gray-700 mb-2">
        Text Size
       </label>
-      <input class="w-full" max="50" min="10" type="range"/>
+      <input id="text-size" class="w-full" max="50" min="10" type="range"/>
      </div>
      <div class="mb-4">
       <label class="block text-gray-700 mb-2">
        Text Color
       </label>
-      <input class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500" type="color"/>
+      <input id="text-color" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500" type="color"/>
      </div>
      <div class="mb-4">
       <label class="block text-gray-700 mb-2">
        Background Color
       </label>
-      <input class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500" type="color"/>
+      <input id="background-color" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500" type="color"/>
      </div>
      <div class="mb-4">
       <label class="block text-gray-700 mb-2">
        Multi-color Text
       </label>
-      <input class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="Enter text with multiple colors" type="text"/>
+      <input id="multi-color-text" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500" placeholder="Enter text with multiple colors" type="text"/>
      </div>
      <div class="mb-4">
       <label class="block text-gray-700 mb-2">
        Image Format
       </label>
-      <select class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500">
+      <select id="image-format" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500">
        <option>
         Square
        </option>
@@ -112,10 +133,10 @@
       </select>
      </div>
      <div class="flex justify-between">
-      <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <button id="save-btn" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
        Save
       </button>
-      <button class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500">
+      <button id="downloadButton" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 hidden">
        Download
       </button>
      </div>
@@ -135,49 +156,49 @@
    <p class="text-lg text-gray-700 mb-4">
     Begin by entering your topic in the search bar. This will help the AI understand what kind of meme you want to create. For example, you can enter "funny cat" or "work from home."
    </p>
-   <img alt="Entering topic in AI Meme Generator" class="rounded-lg shadow-lg mb-4" height="400" src="https://storage.googleapis.com/a1aa/image/XjeaYdcMeVh8y05TOLLfoN7LvcojeMVF437VfcSReY7ZcTu7E.jpg" width="600"/>
+   <img alt="Entering topic in AI Meme Generator" class="rounded-lg shadow-lg mb-4" height="400" src="https://storage.googleapis.com/a1aa/image/1hH28PpXq7ptKBQonlDLb6n5mdFp3Sr5BeYAiADdrDc7cfuTA.jpg" width="600"/>
    <h3 class="text-xl font-bold mb-2">
     Step 2: Generate Meme
    </h3>
    <p class="text-lg text-gray-700 mb-4">
     Click on the "Generate" button to let the AI create a meme based on your topic. The AI will analyze the topic and generate a meme that matches your input.
    </p>
-   <img alt="Generating meme with AI Meme Generator" class="rounded-lg shadow-lg mb-4" height="400" src="https://storage.googleapis.com/a1aa/image/0l6Psu3Im7LkHJkVLUPeA2LUlRaZrdy3diuVpKEU7C08mc3JA.jpg" width="600"/>
+   <img alt="Generating meme with AI Meme Generator" class="rounded-lg shadow-lg mb-4" height="400" src="https://storage.googleapis.com/a1aa/image/XbMqMG8y69IEOtZCYJPxJSmBxfVnHoZXnLsEdRk7OlC5cfuTA.jpg" width="600"/>
    <h3 class="text-xl font-bold mb-2">
     Step 3: Customize Your Meme
    </h3>
    <p class="text-lg text-gray-700 mb-4">
     Once the meme is generated, you can customize it to your liking. You can add text to the image, choose the text position (top, middle, bottom, or both top and bottom), adjust the text size, and change the text color.
    </p>
-   <img alt="Customizing meme with AI Meme Generator" class="rounded-lg shadow-lg mb-4" height="400" src="https://storage.googleapis.com/a1aa/image/gj8KV2NmG575IRpIu0mpxXgBRNert9yvss5nwzfA8QH2N5uTA.jpg" width="600"/>
+   <img alt="Customizing meme with AI Meme Generator" class="rounded-lg shadow-lg mb-4" height="400" src="https://storage.googleapis.com/a1aa/image/XrgzmR1UtVbgFtqvNz2qhqVkMs72eJMuRarfgYww1np35ednA.jpg" width="600"/>
    <h3 class="text-xl font-bold mb-2">
     Step 4: Choose Background Color
    </h3>
    <p class="text-lg text-gray-700 mb-4">
     You can also change the background color of the meme to make it more visually appealing. Simply select a color from the color picker.
    </p>
-   <img alt="Choosing background color in AI Meme Generator" class="rounded-lg shadow-lg mb-4" height="400" src="https://storage.googleapis.com/a1aa/image/JBSDrmq58843AZJtys1TkCjblNH7ENtctXLRhen70iy5mc3JA.jpg" width="600"/>
+   <img alt="Choosing background color in AI Meme Generator" class="rounded-lg shadow-lg mb-4" height="400" src="https://storage.googleapis.com/a1aa/image/3M9Ca9PXHV5YFtbG29vpyuydC6G05FKXxVDOCnVUSvvecfuTA.jpg" width="600"/>
    <h3 class="text-xl font-bold mb-2">
     Step 5: Multi-color Text
    </h3>
    <p class="text-lg text-gray-700 mb-4">
     For a more dynamic look, you can add multi-color text to your meme. Enter the text with different colors to make it stand out.
    </p>
-   <img alt="Adding multi-color text in AI Meme Generator" class="rounded-lg shadow-lg mb-4" height="400" src="https://storage.googleapis.com/a1aa/image/HL4QfZRrM2ywBSxmVhfqMYKvkAfHYGSV7gAuvzT8o4ilbydnA.jpg" width="600"/>
+   <img alt="Adding multi-color text in AI Meme Generator" class="rounded-lg shadow-lg mb-4" height="400" src="https://storage.googleapis.com/a1aa/image/UaBbRgEwKLJkOdX5gx8bvCiimVVVsphJwOk8McUE2yNfcfuTA.jpg" width="600"/>
    <h3 class="text-xl font-bold mb-2">
     Step 6: Select Image Format
    </h3>
    <p class="text-lg text-gray-700 mb-4">
     Choose the image format that best suits your needs. You can select from square, landscape, or portrait formats.
    </p>
-   <img alt="Selecting image format in AI Meme Generator" class="rounded-lg shadow-lg mb-4" height="400" src="https://storage.googleapis.com/a1aa/image/umoZRZAdGUarOFowL7MFc6ZrWi3PPwME8HcErbHD7yMdTu7E.jpg" width="600"/>
+   <img alt="Selecting image format in AI Meme Generator" class="rounded-lg shadow-lg mb-4" height="400" src="https://storage.googleapis.com/a1aa/image/3TC0qfMreNnqep5ff6fgZ8H8HItfy6R0PGk1W2LfeiEcxz9dnA.jpg" width="600"/>
    <h3 class="text-xl font-bold mb-2">
     Step 7: Save and Download
    </h3>
    <p class="text-lg text-gray-700 mb-4">
     Once you're satisfied with your meme, click on the "Save" button to save your changes. You can then download the meme to your device by clicking the "Download" button.
    </p>
-   <img alt="Saving and downloading meme with AI Meme Generator" class="rounded-lg shadow-lg mb-4" height="400" src="https://storage.googleapis.com/a1aa/image/Dvy2J9gZb8YbNtew2fHW9z4EmDgYRSlPCiuflID5H2W0bydnA.jpg" width="600"/>
+   <img alt="Saving and downloading meme with AI Meme Generator" class="rounded-lg shadow-lg mb-4" height="400" src="https://storage.googleapis.com/a1aa/image/xg4hwuYmaUKsD9rfzSGQdjQfRi2NpIsmQhEqd1zVMSh05ednA.jpg" width="600"/>
    <p class="text-lg text-gray-700 mb-4">
     Congratulations! You've successfully created a meme using our AI Meme Generator. Share your meme on social media and let the laughter begin!
    </p>
@@ -200,5 +221,77 @@
     </p>
    </div>
   </footer>
+  <script>
+    function showSpinner() {
+        const statusElement = document.getElementById("status");
+        statusElement.innerHTML = '<div class="spinner"></div>';
+    }
+
+    function hideSpinner() {
+        const statusElement = document.getElementById("status");
+        statusElement.innerHTML = '';
+    }
+
+    function displayError(message) {
+        const statusElement = document.getElementById("status");
+        statusElement.innerHTML = `<p class="text-red-500">${message}</p>`;
+    }
+
+    async function onGenerateButtonClick() {
+        showSpinner();
+
+        const promptInput = document.getElementById("promptInput");
+        const promptValue = "A TOK emoji of a " + promptInput.value;
+        try {
+            const response = await fetch("https://backend.buildpicoapps.com/aero/run/image-generation-api?pk=v1-Z0FBQUFBQmxaZFRCeUd3djhOZm9EZU9oT3JxSTk4dDRTRmYtUzhKZlZXMnlvcVlhcGZHeHM3WFZLWmduUXQxcEdHbTYzaUNkaVZPUGVwUGFwVkYxTXc0dXBac1oweVc2Rnc9PQ==", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ 
+                  prompt: promptValue, 
+                  replicateModelVersion: "dee76b5afde21b0f01ed7925f0665b7e879c50ee718c5f78a9d38e04d523cc5e" })
+            });
+
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                const imageElement = document.getElementById("generatedImage");
+                imageElement.src = data.imageUrl;
+                document.getElementById("downloadButton").classList.remove("hidden");
+            } else {
+                console.error('API error:', data);
+                displayError('An error occurred. Please try again.');
+            }
+        } catch (error) {
+            console.error('Fetch error:', error);
+            displayError('An error occurred. Please try again.');
+        }
+
+        hideSpinner();
+    }
+
+    function setRandomPrompt() {
+        const prompts = ["golden retriever", "watermelon guy", "micheal phelps", "elon musk", "cat", "obama", "michelle obama"];
+        const randomPrompt = prompts[Math.floor(Math.random() * prompts.length)];
+        document.getElementById("promptInput").value = randomPrompt;
+    }
+
+    function downloadImage() {
+        const imageElement = document.getElementById("generatedImage");
+        const imageUrl = imageElement.src;
+
+        if (!imageUrl) {
+            alert("Please generate an image before downloading.");
+            return;
+        }
+
+        window.open(imageUrl, '_blank');
+    }
+
+    document.getElementById("generateButton").addEventListener("click", onGenerateButtonClick);
+    document.getElementById("randomButton").addEventListener("click", setRandomPrompt);
+    document.getElementById("downloadButton").addEventListener("click", downloadImage);
+  </script>
  </body>
 </html>
